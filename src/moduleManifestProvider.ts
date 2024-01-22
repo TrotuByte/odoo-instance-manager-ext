@@ -6,7 +6,11 @@ import {
   TreeItem,
   TreeDataProvider,
   ProviderResult,
-  TreeItemCollapsibleState
+  TreeItemCollapsibleState,
+  ThemeIcon,
+  Uri,
+  ThemeColor,
+  ColorThemeKind, 
 } from 'vscode';
 
 const promiseExec = promisify(exec);
@@ -55,12 +59,14 @@ class ModuleManifestProvider implements TreeDataProvider<ModuleManifestItem> {
         ? new ModuleManifestItem(
             key,
             undefined,
-            TreeItemCollapsibleState.Collapsed
+            TreeItemCollapsibleState.Collapsed,
+            undefined
           )
         : new ModuleManifestItem(
             key,
             `${val}`.trim(),
-            TreeItemCollapsibleState.None
+            TreeItemCollapsibleState.None,
+            null
           )
     );
   }
@@ -81,28 +87,47 @@ class ModuleManifestProvider implements TreeDataProvider<ModuleManifestItem> {
           new ModuleManifestItem(
             val as string,
             undefined,
-            TreeItemCollapsibleState.None
+            TreeItemCollapsibleState.None,
+            null
           )
       );
 		}
   }
-  // getParent?(element: ModuleManifestItem): ProviderResult<ModuleManifestItem> {
-  // 	throw new Error('Method not implemented.');
-  // }
-  // resolveTreeItem?(item: TreeItem, element: ModuleManifestItem, token: CancellationToken): ProviderResult<TreeItem> {
-  // 	throw new Error('Method not implemented.');
-  // }
 }
 
 class ModuleManifestItem extends TreeItem {
   constructor(
     public readonly manifestItem: string,
     public readonly manifestValue: string | undefined,
-    public readonly collapsibleState: TreeItemCollapsibleState
+    public readonly collapsibleState: TreeItemCollapsibleState,
+    public readonly iconPath: any | null
   ) {
-    super(manifestValue ? `${manifestItem}: ${manifestValue}` : manifestItem, collapsibleState);
+    super(
+      manifestValue
+        ? `${manifestItem}: ${manifestValue}`
+        : manifestItem,
+      collapsibleState
+    );
+    this.iconPath = iconPath === null ? {
+    light: path.join(
+      __filename,
+      '..',
+      '..',
+      'resources',
+      'svg',
+      'tree_view_manifest_data_icon_light.svg'
+    ),
+    dark: path.join(
+      __filename,
+      '..',
+      '..',
+      'resources',
+      'svg',
+      'tree_view_manifest_data_icon_dark.svg'
+    ),
+  } : iconPath;
   }
-	id?: string | undefined = this.manifestItem;
+  id?: string | undefined = this.manifestItem;
 }
 
 interface Manifest {
@@ -126,14 +151,19 @@ interface Manifest {
   depends?: string[];
   data?: string[];
   demo?: string[];
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   auto_install?: boolean | string[];
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   external_dependencies: Map<string, string[]>;
   application: boolean;
   assets: Map<string, [string]>;
   installable: boolean;
   maintainer: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   pre_init_hook: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   post_init_hook: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   uninstall_hook: string;
 }
 type ManifestListKeys = 'external_dependencies' | 'demo' | 'data' | 'depends' | 'auto_install';

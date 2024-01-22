@@ -31,8 +31,17 @@
         "title": "Hello World"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "odoo-container",
+          "title": "Odoo",
+          "icon": "resources/svg/tree_view_manifest_data_icon_dark.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "odoo-container": [
         {
           "id": "moduleManifest",
           "name": "Module Manifest"

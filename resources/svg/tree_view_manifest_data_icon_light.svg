@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="512.00006"
+   height="512"
+   viewBox="0 0 512.00006 512"
+   sodipodi:docname="2560px-Odoo_logo.svg.png"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="37.432014"
+       y1="435.75058"
+       x2="655.65076"
+       y2="435.75058"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.82830216,0,0,0.81737635,871.23574,-5.8260232)" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     showgrid="false" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g1"
+     transform="translate(-902.27618,-94.345619)">
+    <path
+       id="path1"
+       style="font-variation-settings:'wght' 900;fill:#131313;fill-opacity:1;stroke:url(#linearGradient2);stroke-width:10.7522;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0;paint-order:fill markers stroke"
+       d="M 1157.5024,99.722948 A 250.62406,250.62398 0 0 0 907.6528,350.86183 250.62406,250.62398 0 0 0 1158.5346,600.96941 250.62406,250.62398 0 0 0 1408.9002,350.34618 v -1.0313 A 250.62406,250.62398 0 0 0 1157.5024,99.722948 Z m -1.4512,106.951782 a 149.6468,146.73817 0 0 1 150.1072,146.13316 v 0.60345 a 149.6468,146.73817 0 0 1 -149.4925,146.73821 149.6468,146.73817 0 0 1 -149.7997,-146.43649 149.6468,146.73817 0 0 1 149.185,-147.03833 z"
+       inkscape:export-filename="..\..\..\..\..\odoo-support-for-vscode\resources\svg\tree_view_manifest_data_icon_dark.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>
