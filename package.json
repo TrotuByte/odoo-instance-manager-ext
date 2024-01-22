@@ -9,13 +9,40 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "workspaceContains:./__manifest__.py"
+  ],
   "main": "./out/extension.js",
   "contributes": {
+    "languages": [
+      {
+        "id": "python"
+      },
+      {
+        "id": "javascript"
+      }
+    ],
+    "configuration": {
+      "title": "Odoo Support for VsCode"
+    },
     "commands": [
       {
         "command": "odoo-support-for-vscode.helloWorld",
         "title": "Hello World"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "moduleManifest",
+          "name": "Module Manifest"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "moduleManifest",
+        "contents": "The module manifest can't be detected"
       }
     ]
   },
