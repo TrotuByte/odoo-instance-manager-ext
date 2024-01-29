@@ -27,8 +27,24 @@
     },
     "commands": [
       {
-        "command": "odoo-support-for-vscode.helloWorld",
-        "title": "Hello World"
+        "command": "osfv.createOdooInstance",
+        "title": "Create odoo instance",
+        "icon": "$(add)"
+      },
+      {
+        "command": "osfv.refreshOdooInstances",
+        "title": "Refresh odoo instances",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "osfv.addOdooModule",
+        "title": "Add odoo module to instance",
+        "icon": "$(add)"
+      },
+      {
+        "command": "osfv.deleteOdooInstance",
+        "title": "Delete odoo instance",
+        "icon": "$(trash)"
       }
     ],
     "viewsContainers": {
@@ -43,8 +59,14 @@
     "views": {
       "odoo-container": [
         {
+          "id": "odooInstanceManager",
+          "name": "Odoo instance manager",
+          "contextualTitle": "Instance manager"
+        },
+        {
           "id": "moduleManifest",
-          "name": "Module Manifest"
+          "name": "Module manifest",
+          "contextualTitle": "Module manifest"
         }
       ]
     },
@@ -52,8 +74,38 @@
       {
         "view": "moduleManifest",
         "contents": "The module manifest can't be detected"
+      },
+      {
+        "view": "odooInstanceManager",
+        "contents": "You has not created any instances.\n[Create instance](command:osfv.createOdooInstance)"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "osfv.createOdooInstance",
+          "when": "view == odooInstanceManager",
+          "group": "navigation"
+        },
+        {
+          "command": "osfv.refreshOdooInstances",
+          "when": "view == odooInstanceManager",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "osfv.addOdooModule",
+          "when": "view == odooInstanceManager && viewItem == instanceOdoo",
+          "group": "inline"
+        },
+        {
+          "command": "osfv.deleteOdooInstance",
+          "when": "view == odooInstanceManager && viewItem == instanceOdoo",
+          "group": "inline"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
