@@ -94,7 +94,7 @@ function createInstance(context: vscode.ExtensionContext, instanceFetcher: Insta
       progress.report({message: 'Creating the container...'});
       const port = instanceFetcher.getAvailablePort();    
       try {
-        await promiseExec(`docker run -d --name ${containerId} --network ${PostgreSQLManager.networkName} -p ${port}:8069 -v ${join('.', configDirectoryName)}:/etc/odoo -v ${join('.', addonsDirectoryName)}:/mnt/extra-addons -e HOST=${PostgreSQLManager.containerName} -e USER=${await context.secrets.get(PostgreSQLSecretsKey.pgUser)} -e PASSWORD=${await context.secrets.get(PostgreSQLSecretsKey.pgPass)} odoo:${selectedVersion}`, {cwd:  containerPath.fsPath});
+        await promiseExec(`docker container create --name ${containerId} --network ${PostgreSQLManager.networkName} -p ${port}:8069 -v ${join('.', configDirectoryName)}:/etc/odoo -v ${join('.', addonsDirectoryName)}:/mnt/extra-addons -e HOST=${PostgreSQLManager.containerName} -e USER=${await context.secrets.get(PostgreSQLSecretsKey.pgUser)} -e PASSWORD=${await context.secrets.get(PostgreSQLSecretsKey.pgPass)} odoo:${selectedVersion}`, {cwd:  containerPath.fsPath});
         instanceFetcher.addToBusyPorts(port);
       } catch (error) {
         vscode.window.showErrorMessage((error as Error).message);

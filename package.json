@@ -50,6 +50,16 @@
         "icon": "$(globe)"
       },
       {
+        "command": "oim.instance.start",
+        "title": "Start odoo instance",
+        "icon": "$(debug-start)"
+      },
+      {
+        "command": "oim.instance.stop",
+        "title": "Stop odoo instance",
+        "icon": "$(debug-stop)"
+      },
+      {
         "command": "oim.instance.module.add",
         "title": "Add odoo module to instance",
         "icon": "$(add)"
@@ -98,7 +108,16 @@
         }
       ],
       "view/item/context": [
-
+        {
+          "command": "oim.instance.start",
+          "when": "view == odooInstanceManager && viewItem == instanceOdoo",
+          "group": "inline"
+        },
+        {
+          "command": "oim.instance.stop",
+          "when": "view == odooInstanceManager && viewItem == instanceOdoo",
+          "group": "inline"
+        },
         {
           "command": "oim.instance.open",
           "when": "view == odooInstanceManager && viewItem == instanceOdoo",
