@@ -6,6 +6,7 @@ import { PostgreSQLManager, PostgreSQLSecretsKey } from '../postgresql/postgresq
 import { randomUUID } from 'crypto';
 import { join } from 'path';
 import { PostgresStatus } from '../postgresql/postgresql.model';
+import { InstanceStatusManager } from './instance.status.manager';
 
 interface QuickPickOdooInstance extends vscode.QuickPickItem{
 	odooInstance?: OdooInstance
@@ -235,12 +236,30 @@ function openInBrowser(instanceFetcher: InstancesFetcher){
     vscode.env.openExternal(vscode.Uri.parse(`http://localhost:${port}`));
   };
 }
+function startInstance(instanceStatusManager: InstanceStatusManager){
+  return async (instance: OdooInstanceItem | undefined) => {    
+    if(!instance){
+      return;
+    }
+    await instanceStatusManager.startInstance(instance.id!);
+  };
+}
+function stopInstance(instanceStatusManager: InstanceStatusManager){
+  return async (instance: OdooInstanceItem | undefined) => {
+    if(!instance){
+      return;
+    }
+    await instanceStatusManager.stopInstance(instance.id!);
+  };
+}
 
-export default function registerInstanceCommands(context: vscode.ExtensionContext, instanceFetcher: InstancesFetcher, instanceDataProvider: InstanceDataProvider, postgresManager: PostgreSQLManager){
+export default function registerInstanceCommands(context: vscode.ExtensionContext, instanceFetcher: InstancesFetcher, instanceDataProvider: InstanceDataProvider, postgresManager: PostgreSQLManager, instanceStatusManager: InstanceStatusManager){
   return [
     vscode.commands.registerCommand('oim.instance.create', createInstance(context, instanceFetcher, instanceDataProvider, postgresManager)),
     vscode.commands.registerCommand('oim.instance.refresh', refreshInstances(instanceDataProvider)),
     vscode.commands.registerCommand('oim.instance.delete', deleteOdooInstance(instanceFetcher, instanceDataProvider)),
-    vscode.commands.registerCommand('oim.instance.open', openInBrowser(instanceFetcher))
+    vscode.commands.registerCommand('oim.instance.open', openInBrowser(instanceFetcher)),
+    vscode.commands.registerCommand('oim.instance.start', startInstance(instanceStatusManager)),
+    vscode.commands.registerCommand('oim.instance.stop', stopInstance(instanceStatusManager))
   ];
 }

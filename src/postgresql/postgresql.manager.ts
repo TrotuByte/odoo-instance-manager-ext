@@ -1,12 +1,7 @@
 import { randomUUID } from "crypto";
-import { promiseExec } from "../extension_utils";
+import { ContainerDataJson, DockerNotAccessibleError, promiseExec } from "../extension_utils";
 import { PostgresStatus } from "./postgresql.model";
 import { EventEmitter, ExtensionContext } from "vscode";
-class DockerNotAccessibleError extends Error{
-    constructor(){
-        super("We can't use the command docker, please ensure you are running docker in your system or this user can use docker.");
-    }
-}
 export enum PostgreSQLSecretsKey {
     pgUser="PG_PASS",
     pgPass="PG_USER"
@@ -44,10 +39,7 @@ export class PostgreSQLManager {
             this.#eventEmitter.fire(PostgresStatus.notInitialized);
             return PostgresStatus.notInitialized;
         }
-        const container: {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            State: 'created' | 'running' | 'exited' | 'paused' | 'restarting' | 'removing' | 'dead'
-        } = JSON.parse(stdout);
+        const container: ContainerDataJson = JSON.parse(stdout);
         if(container.State === 'running') {
             this.#eventEmitter.fire(PostgresStatus.running);
             return PostgresStatus.running;

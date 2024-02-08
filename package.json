@@ -110,26 +110,26 @@
       "view/item/context": [
         {
           "command": "oim.instance.start",
-          "when": "view == odooInstanceManager && viewItem == instanceOdoo",
+          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/ && viewItem not in oim.startedInstances",
           "group": "inline"
         },
         {
           "command": "oim.instance.stop",
-          "when": "view == odooInstanceManager && viewItem == instanceOdoo",
+          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/ && viewItem in oim.startedInstances",
           "group": "inline"
         },
         {
           "command": "oim.instance.open",
-          "when": "view == odooInstanceManager && viewItem == instanceOdoo",
+          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/ && viewItem in oim.startedInstances",
           "group": "inline"
         },
         {
           "command": "oim.instance.module.add",
-          "when": "view == odooInstanceManager && viewItem == instanceOdoo"
+          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/"
         },
         {
           "command": "oim.instance.delete",
-          "when": "view == odooInstanceManager && viewItem == instanceOdoo"
+          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/"
         }
       ]
     }

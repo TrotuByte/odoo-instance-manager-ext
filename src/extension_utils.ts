@@ -3,6 +3,15 @@ import { promisify } from "util";
 import { CancellationToken, ProviderResult, TreeDataProvider, TreeItem, Event } from "vscode";
 
 export const promiseExec = promisify(exec);
+export class DockerNotAccessibleError extends Error{
+  constructor() {
+      super("We can't use the command docker, please ensure you are running docker in your system or this user can use docker.");
+  }
+}
+export interface ContainerDataJson{
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  State: 'created' | 'running' | 'exited' | 'paused' | 'restarting' | 'removing' | 'dead'
+}
 export abstract class WorkspaceRequiredDataProvider<T extends TreeItem>
   implements TreeDataProvider<T> {
   public readonly workspaceDir: string | undefined;

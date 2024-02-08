@@ -1,10 +1,14 @@
 import { EventEmitter, ExtensionContext, ProviderResult, ThemeIcon, TreeDataProvider, TreeItem, TreeItemCollapsibleState, TreeItemLabel, Uri, workspace } from "vscode";
 import { OdooInstance, OdooVersion, OdooVersionData, parseOdooVersion } from "./instance.model";
 import { join } from "path";
+import { InstanceStatusManager } from "./instance.status.manager";
 
 export enum OdooInstanceItemType{
   instanceOdoo="instanceOdoo",
   instanceModule="instanceModule"
+}
+export function getFullId(id: string){
+  return `${OdooInstanceItemType.instanceOdoo}_${id}`;
 }
 export class OdooInstanceItem extends TreeItem {
   readonly instanceVersion?: OdooVersion;
@@ -30,14 +34,16 @@ export class OdooInstanceItem extends TreeItem {
   }
 }
 export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> {
-  readonly #instancesManager: InstancesFetcher;
+  readonly #instancesFetcher: InstancesFetcher;
+  readonly #instanceStatusManager: InstanceStatusManager;
   readonly #eventEmitter = new EventEmitter<
     void | OdooInstanceItem | OdooInstanceItem[] | null | undefined
   >();
   onDidChangeTreeData? = this.#eventEmitter.event;
 
-  constructor(instancesManager: InstancesFetcher) {
-    this.#instancesManager = instancesManager;
+  constructor(instancesFetcher: InstancesFetcher, instanceStatusManager: InstanceStatusManager) {
+    this.#instancesFetcher = instancesFetcher;
+    this.#instanceStatusManager = instanceStatusManager;
   }
   refresh() {
     this.#eventEmitter.fire();
@@ -59,11 +65,12 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
     return Promise.resolve([]);
   }
   #getAllInstances(): OdooInstanceItem[] {
-    const versions = this.#instancesManager.getAllInstances();
+    const versions = this.#instancesFetcher.getAllInstances();
     const instancesTree: OdooInstanceItem[] = [];
     for (const versionData of versions){
       instancesTree.push(...versionData.instances.map(instance=>this.#parseInstance(instance, versionData.version)));
     }
+    this.#instanceStatusManager.intialize(instancesTree);
     return instancesTree;
   }
   #getModules(odooInstancePath: Uri): OdooInstanceItem[]{
@@ -87,7 +94,7 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
       instanceLibPath: instance.instanceLibPath,
       instanceVersion: version,
       instancePort: instance.instancePort,
-      contextValue: OdooInstanceItemType.instanceOdoo,
+      contextValue: getFullId(instance.instanceId),
       collapsibleState: TreeItemCollapsibleState.Collapsed,
       iconPath: {
         light: join(
