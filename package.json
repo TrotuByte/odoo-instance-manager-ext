@@ -1,7 +1,10 @@
 {
-  "name": "odoo-support-for-vscode",
-  "displayName": "Odoo support for VsCode",
-  "description": "",
+  "name": "odoo-instance-manager",
+  "displayName": "Odoo instance manager",
+  "author": {
+    "name": "AnesCDev"
+  },
+  "description": "This extension give to the developer a ease way to create and manage Odoo Community Edition Instances for the version 15, 16 and 17",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.81.0"
@@ -23,28 +26,38 @@
       }
     ],
     "configuration": {
-      "title": "Odoo Support for VsCode"
+      "title": "Odoo instance manager"
     },
     "commands": [
       {
-        "command": "osfv.createOdooInstance",
+        "command": "oim.instance.create",
         "title": "Create odoo instance",
         "icon": "$(add)"
       },
       {
-        "command": "osfv.refreshOdooInstances",
+        "command": "oim.instance.refresh",
         "title": "Refresh odoo instances",
         "icon": "$(refresh)"
       },
       {
-        "command": "osfv.addOdooModule",
+        "command": "oim.instance.delete",
+        "title": "Delete odoo instance",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "oim.instance.open",
+        "title": "Open in browser",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "oim.instance.module.add",
         "title": "Add odoo module to instance",
         "icon": "$(add)"
       },
       {
-        "command": "osfv.deleteOdooInstance",
-        "title": "Delete odoo instance",
-        "icon": "$(trash)"
+        "command": "oim.postgresql.statusbar",
+        "title": "Manage status of PostgresSQL container",
+        "icon": "$(database)"
       }
     ],
     "viewsContainers": {
@@ -62,47 +75,42 @@
           "id": "odooInstanceManager",
           "name": "Odoo instance manager",
           "contextualTitle": "Instance manager"
-        },
-        {
-          "id": "moduleManifest",
-          "name": "Module manifest",
-          "contextualTitle": "Module manifest"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "moduleManifest",
-        "contents": "The module manifest can't be detected"
-      },
-      {
         "view": "odooInstanceManager",
-        "contents": "You has not created any instances.\n[Create instance](command:osfv.createOdooInstance)"
+        "contents": "You has not created any instances.\n[Create instance](command:oim.instance.create)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "osfv.createOdooInstance",
+          "command": "oim.instance.create",
           "when": "view == odooInstanceManager",
           "group": "navigation"
         },
         {
-          "command": "osfv.refreshOdooInstances",
+          "command": "oim.instance.refresh",
           "when": "view == odooInstanceManager",
           "group": "navigation"
         }
       ],
       "view/item/context": [
+
         {
-          "command": "osfv.addOdooModule",
+          "command": "oim.instance.open",
           "when": "view == odooInstanceManager && viewItem == instanceOdoo",
           "group": "inline"
         },
         {
-          "command": "osfv.deleteOdooInstance",
-          "when": "view == odooInstanceManager && viewItem == instanceOdoo",
-          "group": "inline"
+          "command": "oim.instance.module.add",
+          "when": "view == odooInstanceManager && viewItem == instanceOdoo"
+        },
+        {
+          "command": "oim.instance.delete",
+          "when": "view == odooInstanceManager && viewItem == instanceOdoo"
         }
       ]
     }

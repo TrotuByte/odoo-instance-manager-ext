@@ -19,8 +19,10 @@ export function parseOdooVersion(odooVersion: string | undefined | null): OdooVe
 export type OdooInstance = {
     instanceId: string;
     instanceName: string;
-    instancePath: Uri;
-    instanceVenvPath: Uri;
+    instanceAddonPath: Uri;
+    instanceConfigPath: Uri;
+    instanceLibPath: Uri;
+    instancePort: number;
 };
 export type OdooVersionData = {
     version: OdooVersion;

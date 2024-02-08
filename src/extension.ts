@@ -1,34 +1,39 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { ModuleManifestProvider } from './treedataprovider/moduleManifestProvider';
-import { InstanceDataProvider } from './treedataprovider/instanceDataProvider';
-import { registerCommands } from './commands';
-import { InstancesFetcher } from './data/instances';
+import { InstanceDataProvider, InstancesFetcher } from './instance/instance.treedataprovider';
+import registerInstanceCommands from './instance/instance.command';
+import { createPostgresStatusBar } from './postgresql/postgresql.statusbar';
+import { PostgreSQLManager } from './postgresql/postgresql.manager';
+import registerPostgresCommands from './postgresql/postgresql.command';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
+const postgresManager = new PostgreSQLManager();
 export async function activate(context: vscode.ExtensionContext) {
+	await vscode.window.withProgress({title: "Loading Odoo Instance Manager for Visual Studio Code", location: vscode.ProgressLocation.Window}, async (progress, cancel) => {
+		const instanceFetcher = new InstancesFetcher(context);
+		await instanceFetcher.initialize();
+		const instanceDataProviver = new InstanceDataProvider(instanceFetcher);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "odoo-support-for-vscode" is now active!');
+		// TreeDataProviders
+		vscode.window.registerTreeDataProvider('odooInstanceManager', instanceDataProviver);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const instanceFetcher = new InstancesFetcher(context);
-	await instanceFetcher.initialize();
-	const instanceDataProviver = new InstanceDataProvider(instanceFetcher);
-	const odooDisposables: vscode.Disposable[] = registerCommands(context, instanceFetcher, instanceDataProviver); 
-	const actualWorkspace =
-		vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0
-		? vscode.workspace.workspaceFolders[0].uri.fsPath
-		: undefined;
-	vscode.window.registerTreeDataProvider('moduleManifest', new ModuleManifestProvider(actualWorkspace));
-	vscode.window.registerTreeDataProvider('odooInstanceManager', instanceDataProviver);
-	context.subscriptions.push(...odooDisposables);
+		// StatusBarItem
+		const postgresStatusBar = createPostgresStatusBar(context, await postgresManager.getStatus());
+		
+		// Commands
+		context.subscriptions.push( 
+			...registerInstanceCommands(context, instanceFetcher, instanceDataProviver, postgresManager),
+			...registerPostgresCommands(context, postgresManager, postgresStatusBar.statusBarItem),
+			postgresStatusBar.statusBarItem,
+			postgresManager.onReadStatus(newStatus=>postgresStatusBar.changeText(newStatus))
+		);
+	});
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+	postgresManager.stopContainer();
+	postgresManager.dispose();
+}
