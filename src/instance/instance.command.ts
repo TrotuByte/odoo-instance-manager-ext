@@ -236,20 +236,50 @@ function openInBrowser(instanceFetcher: InstancesFetcher){
     vscode.env.openExternal(vscode.Uri.parse(`http://localhost:${port}`));
   };
 }
+
 function startInstance(instanceStatusManager: InstanceStatusManager){
   return async (instance: OdooInstanceItem | undefined) => {    
     if(!instance){
       return;
     }
-    await instanceStatusManager.startInstance(instance.id!);
+    await instanceStatusManager.startInstance(instance.instanceId!);
   };
 }
+
 function stopInstance(instanceStatusManager: InstanceStatusManager){
   return async (instance: OdooInstanceItem | undefined) => {
     if(!instance){
       return;
     }
-    await instanceStatusManager.stopInstance(instance.id!);
+    await instanceStatusManager.stopInstance(instance.instanceId!);
+  };
+}
+
+function openAddonsFolder(){
+  return async (instance: OdooInstanceItem | undefined) => {
+    if(instance === undefined) {
+      return;
+    }
+    console.log(instance);
+    let opener;
+    switch (process.platform) {
+      case 'darwin':
+        opener = 'open';
+        break;
+      case 'win32':
+        opener = 'explorer';
+        break;
+      default:
+        opener = 'xdg-open';
+        break;
+    }
+    try {
+      await promiseExec(`${opener} "${instance.instanceAddonPath!.fsPath}"`);
+    } catch (error) {
+      if(opener !== 'explorer'){
+        console.error(error);
+      }
+    }
   };
 }
 
@@ -260,6 +290,7 @@ export default function registerInstanceCommands(context: vscode.ExtensionContex
     vscode.commands.registerCommand('oim.instance.delete', deleteOdooInstance(instanceFetcher, instanceDataProvider)),
     vscode.commands.registerCommand('oim.instance.open', openInBrowser(instanceFetcher)),
     vscode.commands.registerCommand('oim.instance.start', startInstance(instanceStatusManager)),
-    vscode.commands.registerCommand('oim.instance.stop', stopInstance(instanceStatusManager))
+    vscode.commands.registerCommand('oim.instance.stop', stopInstance(instanceStatusManager)),
+    vscode.commands.registerCommand('oim.instance.module.openFolder', openAddonsFolder())
   ];
 }

@@ -1,36 +1,49 @@
-import { EventEmitter, ExtensionContext, ProviderResult, ThemeIcon, TreeDataProvider, TreeItem, TreeItemCollapsibleState, TreeItemLabel, Uri, workspace } from "vscode";
+import { EventEmitter, ExtensionContext, ProviderResult, ThemeIcon, TreeDataProvider, TreeItem, TreeItemCollapsibleState, TreeItemLabel, Uri, window, workspace } from "vscode";
 import { OdooInstance, OdooVersion, OdooVersionData, parseOdooVersion } from "./instance.model";
 import { join } from "path";
 import { InstanceStatusManager } from "./instance.status.manager";
+import { promiseExec } from "../extension_utils";
+import { execSync } from "child_process";
 
 export enum OdooInstanceItemType{
   instanceOdoo="instanceOdoo",
-  instanceModule="instanceModule"
+  instanceModule="instanceModule",
+  instanceModuleGroup="instanceModuleGroup"
+}
+export enum OdooInstanceFolderModules{
+  preAddedModules,
+  userAddedModules
 }
 export function getFullId(id: string){
   return `${OdooInstanceItemType.instanceOdoo}_${id}`;
 }
 export class OdooInstanceItem extends TreeItem {
+  readonly instanceId?: string;
   readonly instanceVersion?: OdooVersion;
   readonly instancePort?: number;
   readonly instanceAddonPath?: Uri;
   readonly instanceConfigPath?: Uri;
   readonly instanceLibPath?: Uri;
+  readonly moduleFolderType?: OdooInstanceFolderModules;
   constructor(
     label: string | TreeItemLabel,
+    instanceId?: string,
     instanceAddonPath?: Uri,
     instanceConfigPath?: Uri,
     instanceLibPath?: Uri,
     instanceVersion?: OdooVersion,
     instancePort?: number,
     collapsibleState?: TreeItemCollapsibleState,
+    moduleFolderType?: OdooInstanceFolderModules
   ) {
     super(label, collapsibleState);
+    this.instanceId = instanceId;
     this.instanceAddonPath = instanceAddonPath;
     this.instanceConfigPath = instanceConfigPath;
     this.instanceLibPath = instanceLibPath;
     this.instanceVersion = instanceVersion;
     this.instancePort = instancePort;
+    this.moduleFolderType = moduleFolderType;
   }
 }
 export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> {
@@ -59,9 +72,15 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
     if (!element) {
       return Promise.resolve(this.#getAllInstances());
     }
-    // if(element.contextValue === OdooInstanceItemType.instanceOdoo){
-    //   return Promise.resolve(this.#getModules(element.instancePath!));
-    // }
+    if(element.contextValue?.includes(OdooInstanceItemType.instanceOdoo)){
+      return Promise.resolve([
+        this.#parseModuleGroup(OdooInstanceFolderModules.preAddedModules, element.instanceId!),
+        this.#parseModuleGroup(OdooInstanceFolderModules.userAddedModules, element.instanceId!)
+      ] as OdooInstanceItem[]);
+    }
+    if(element.contextValue === OdooInstanceItemType.instanceModuleGroup) {
+      return Promise.resolve(this.#getModules(element.instanceId!, element.moduleFolderType!));
+    }
     return Promise.resolve([]);
   }
   #getAllInstances(): OdooInstanceItem[] {
@@ -73,22 +92,55 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
     this.#instanceStatusManager.intialize(instancesTree);
     return instancesTree;
   }
-  #getModules(odooInstancePath: Uri): OdooInstanceItem[]{
-    return [this.#parseModule('test_module')];
+  #getModules(instanceId: string, folderModule: OdooInstanceFolderModules): OdooInstanceItem[]{
+    const modulesURL: string[] = [];
+    try {
+      switch(folderModule){
+        case OdooInstanceFolderModules.preAddedModules:
+          modulesURL.push(...execSync(`docker exec ${instanceId} sh -c "find /usr/lib/python3/dist-packages/odoo/addons -depth -mindepth 1 -maxdepth 1 -not -path "*/__pycache__" -type d"`, {encoding: 'utf-8'}).split('\n'));
+          break;
+        case OdooInstanceFolderModules.userAddedModules:
+          modulesURL.push(...execSync(`docker exec ${instanceId} sh -c "find /mnt/extra-addons/. -depth -mindepth 1 -maxdepth 1 -not -path "*/__pycache__" -type d"`, {encoding: 'utf-8'}).split('\n'));
+          break;
+      }
+    } catch (error) {
+      if((error as Error).message.match(/Container .* is not running$/gm) !== null){
+        window.showErrorMessage('The instance must to be started for get the module list. Start it and refresh the instances');
+      }else{
+        console.error(error);
+      }
+    }
+    return modulesURL.map(moduleUrl => {
+      const moduleId = moduleUrl.substring(moduleUrl.lastIndexOf('/')+1).trim();
+      if(moduleId.length > 0) {
+        return this.#parseModule(moduleId);
+      }
+    }).filter(val=>val !== undefined)
+    .sort((module, nextModule) => module!.instanceId!.toLowerCase().localeCompare(nextModule!.instanceId!.toLowerCase())) as OdooInstanceItem[];
+  }
+  #parseModuleGroup(folderModuleType: OdooInstanceFolderModules, instanceId: string): OdooInstanceItem{
+    return {
+      label: folderModuleType === OdooInstanceFolderModules.preAddedModules ? 'Preadded modules' : 'Your modules',
+      instanceId: instanceId,
+      contextValue: OdooInstanceItemType.instanceModuleGroup,
+      moduleFolderType: folderModuleType ,
+      iconPath: new ThemeIcon('folder'),
+      collapsibleState: TreeItemCollapsibleState.Collapsed
+    };
   }
   #parseModule(moduleId: string, moduleName?: string): OdooInstanceItem{
     return {
-      id: moduleId,
+      instanceId: moduleId,
       label: moduleName ?? moduleId,
       contextValue: OdooInstanceItemType.instanceModule,
-      iconPath: new ThemeIcon('symbol-constructor')
+      iconPath: new ThemeIcon('layers')
     };
   }
   #parseInstance(instance: OdooInstance, version?: OdooVersion): OdooInstanceItem{
     return {
-      id: instance.instanceId,
       label: instance.instanceName,
       description: `v${version}`,
+      instanceId: instance.instanceId,
       instanceAddonPath: instance.instanceAddonPath,
       instanceConfigPath: instance.instanceConfigPath,
       instanceLibPath: instance.instanceLibPath,

@@ -11,10 +11,10 @@ export class InstanceStatusManager{
     #initialized: boolean = false;
     #startedInstances: string[] = [];
     intialize(odooInstances: OdooInstanceItem[]){
-        for (const instance of odooInstances){
-            const instanceStatus = this.#getStatus(instance.id!);
+        for (const instance of odooInstances) {
+            const instanceStatus = this.#getStatus(instance.instanceId!);
             if(instanceStatus === 'running'){
-                this.#startedInstances.push(getFullId(instance.id!));
+                this.#startedInstances.push(getFullId(instance.instanceId!));
             }
         }
         this.#updateContext();
