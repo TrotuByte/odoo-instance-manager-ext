@@ -1,10 +1,10 @@
-import { commands } from 'vscode';
+import { commands, l10n, window } from 'vscode';
 import { OdooInstanceItem, getFullId } from './instance.treedataprovider';
 import { ContainerDataJson, DockerNotAccessibleError, promiseExec } from '../extension_utils';
 import { execSync } from 'child_process';
 class InstanceStatusManagerNotInitializedError extends Error{
     constructor() {
-        super('This instance of InstanceStatusManaged hasn\'t been initialized.');
+        super(l10n.t('This instance of InstanceStatusManaged hasn\'t been initialized.'));
     }
 }
 export class InstanceStatusManager{
@@ -51,7 +51,7 @@ export class InstanceStatusManager{
             this.#startedInstances.push(getFullId(id));
             this.#updateContext();
         } catch (error) {
-            console.error(error);
+            window.showErrorMessage((error as Error).message);
         }
     }
     async stopInstance(id: string){
@@ -65,7 +65,7 @@ export class InstanceStatusManager{
             this.#startedInstances.splice(arrayIndex, 1);
             this.#updateContext();
         } catch (error) {
-            console.error(error);
+            window.showErrorMessage((error as Error).message);
         }
     }
 }

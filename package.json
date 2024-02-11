@@ -9,6 +9,7 @@
   "engines": {
     "vscode": "^1.81.0"
   },
+  "l10n": "./l10n",
   "categories": [
     "Other"
   ],
@@ -30,107 +31,137 @@
     },
     "commands": [
       {
+        "command": "oim.refresh",
+        "title": "%oim.refresh.title%",
+        "icon": "$(refresh)",
+        "enablement": "oim.startedDocker == false"
+      },
+      {
         "command": "oim.instance.create",
-        "title": "Create odoo instance",
-        "icon": "$(add)"
+        "title": "%oim.instance.create.title%",
+        "icon": "$(add)",
+        "enablement": "oim.startedDocker == true"
       },
       {
         "command": "oim.instance.refresh",
-        "title": "Refresh odoo instances",
-        "icon": "$(refresh)"
+        "title": "%oim.instance.refresh.title%",
+        "icon": "$(refresh)",
+        "enablement": "oim.startedDocker == true"
       },
       {
         "command": "oim.instance.delete",
-        "title": "Delete odoo instance",
-        "icon": "$(trash)"
+        "title": "%oim.instance.delete.title%",
+        "icon": "$(trash)",
+        "enablement": "oim.startedDocker == true"
       },
       {
         "command": "oim.instance.open",
-        "title": "Open in browser",
-        "icon": "$(globe)"
+        "title": "%oim.instance.open.title%",
+        "icon": "$(globe)",
+        "enablement": "oim.startedDocker == true"
       },
       {
         "command": "oim.instance.start",
-        "title": "Start odoo instance",
-        "icon": "$(debug-start)"
+        "title": "%oim.instance.start.title%",
+        "icon": "$(debug-start)",
+        "enablement": "oim.startedDocker == true"
       },
       {
         "command": "oim.instance.stop",
-        "title": "Stop odoo instance",
-        "icon": "$(debug-stop)"
+        "title": "%oim.instance.stop.title%",
+        "icon": "$(debug-stop)",
+        "enablement": "oim.startedDocker == true"
       },
       {
         "command": "oim.instance.module.openFolder",
-        "title": "Open odoo modules folder",
-        "icon": "$(folder)"
+        "title": "%oim.instance.module.openFolder.title%",
+        "icon": "$(folder)",
+        "enablement": "oim.startedDocker == true"
       },
       {
         "command": "oim.postgresql.statusbar",
-        "title": "Manage status of PostgresSQL container",
-        "icon": "$(database)"
+        "title": "%oim.postgresql.statusbar.title%",
+        "icon": "$(database)",
+        "enablement": "oim.startedDocker == true"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "odoo-container",
-          "title": "Odoo",
+          "id": "oim-view-container",
+          "title": "%oim.view.container.title%",
           "icon": "resources/svg/tree_view_manifest_data_icon_dark.svg"
         }
       ]
     },
     "views": {
-      "odoo-container": [
+      "oim-view-container": [
         {
-          "id": "odooInstanceManager",
-          "name": "Odoo instance manager",
-          "contextualTitle": "Instance manager"
+          "id": "oim.instances.view",
+          "name": "%oim.instances.view.name%",
+          "contextualTitle": "%oim.instances.view.contextualTitle%"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "odooInstanceManager",
-        "contents": "You has not created any instances.\n[Create instance](command:oim.instance.create)"
+        "view": "oim.instances.view",
+        "contents": "%oim.instances.view.welcome.dockerStarted%",
+        "when": "oim.startedDocker == true"
+      },
+      {
+        "view": "oim.instances.view",
+        "contents": "%oim.instances.view.welcome.dockerNotStarted%",
+        "when": "oim.startedDocker == false"
+      },
+      {
+        "view": "oim.instances.view",
+        "contents": "%oim.instances.view.welcome.loading%",
+        "when": "oim.startedDocker == null"
       }
     ],
     "menus": {
       "view/title": [
         {
+          "command": "oim.refresh",
+          "when": "oim.startedDocker == false && view == oim.instances.view",
+          "group": "navigation"
+        },
+        {
           "command": "oim.instance.create",
-          "when": "view == odooInstanceManager",
+          "when": "oim.startedDocker == true && view == oim.instances.view",
           "group": "navigation"
         },
         {
           "command": "oim.instance.refresh",
-          "when": "view == odooInstanceManager",
+          "when": "oim.startedDocker == true && view == oim.instances.view",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
           "command": "oim.instance.module.openFolder",
-          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/",
+          "when": "view == oim.instances.view && viewItem =~ /^instanceOdoo_.+$/",
           "group": "inline"
         },
         {
           "command": "oim.instance.start",
-          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/ && viewItem not in oim.startedInstances",
+          "when": "view == oim.instances.view && viewItem =~ /^instanceOdoo_.+$/ && viewItem not in oim.startedInstances",
           "group": "inline"
         },
         {
           "command": "oim.instance.stop",
-          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/ && viewItem in oim.startedInstances",
+          "when": "view == oim.instances.view && viewItem =~ /^instanceOdoo_.+$/ && viewItem in oim.startedInstances",
           "group": "inline"
         },
         {
           "command": "oim.instance.open",
-          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/ && viewItem in oim.startedInstances",
+          "when": "view == oim.instances.view && viewItem =~ /^instanceOdoo_.+$/ && viewItem in oim.startedInstances",
           "group": "inline"
         },
         {
           "command": "oim.instance.delete",
-          "when": "view == odooInstanceManager && viewItem =~ /^instanceOdoo_.+$/"
+          "when": "view == oim.instances.view && viewItem =~ /^instanceOdoo_.+$/"
         }
       ]
     }
@@ -144,15 +175,16 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.81.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
+    "@types/vscode": "^1.81.0",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
+    "@vscode/test-electron": "^2.3.4",
     "eslint": "^8.47.0",
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
-    "typescript": "^5.1.6",
-    "@vscode/test-electron": "^2.3.4"
+    "tsx": "^4.7.1",
+    "typescript": "^5.1.6"
   }
 }

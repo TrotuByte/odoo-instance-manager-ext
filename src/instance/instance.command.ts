@@ -12,10 +12,7 @@ interface QuickPickOdooInstance extends vscode.QuickPickItem{
 	odooInstance?: OdooInstance
 	version?: OdooVersion
 }
-enum ConfirmDeleteOption{
-  yes='Yes',
-  no='No'
-}
+
 async function askForInstance(instanceFetcher: InstancesFetcher){
 	const quickPickItems: QuickPickOdooInstance[] = [];
   for (const version of instanceFetcher.getAllInstances()) {
@@ -34,18 +31,18 @@ async function askForInstance(instanceFetcher: InstancesFetcher){
     );
   }
   return await vscode.window.showQuickPick(quickPickItems, {
-    title: 'Select the instance',
-	placeHolder: 'Filter'
+    title: vscode.l10n.t('Select the instance'),
+	  placeHolder: vscode.l10n.t('Filter')
   });
 }
 
 function createInstance(context: vscode.ExtensionContext, instanceFetcher: InstancesFetcher, instanceDataProvider: InstanceDataProvider, postgresManager: PostgreSQLManager){
 	return async (args: any[])=>{
     if(await postgresManager.getStatus() === PostgresStatus.notInitialized){
-      vscode.window.showErrorMessage('Ensure that the PostgreSQL database is initialized');
+      vscode.window.showErrorMessage(vscode.l10n.t('Ensure that the PostgreSQL database is initialized'));
       return;
     }
-		const title = 'Setup an Odoo instance';
+		const title = vscode.l10n.t('Setup an Odoo instance');
 		const getTitle = (actualStep: number, steps: number) =>
 		title + ` (${actualStep}/${steps})`;
 		const maxSteps = 2;
@@ -54,7 +51,7 @@ function createInstance(context: vscode.ExtensionContext, instanceFetcher: Insta
 		// Get name for odoo instance
 		const containerName = await vscode.window.showInputBox({
 			title: getTitle(step++, maxSteps),
-			placeHolder: 'Instance name',
+			placeHolder: vscode.l10n.t('Instance name'),
 		});
 		if (containerName === undefined) {
 			return;
@@ -64,17 +61,17 @@ function createInstance(context: vscode.ExtensionContext, instanceFetcher: Insta
 		const selectedVersion = parseOdooVersion(
 		await vscode.window.showQuickPick(Object.values(OdooVersion), {
 			title: getTitle(step++, maxSteps),
-			placeHolder: 'Instance version',
+			placeHolder: vscode.l10n.t('Instance version'),
 		}));
 		if (selectedVersion === undefined) {
 			return;
 		}
     vscode.window.withProgress({
-      title: 'Creating odoo instance',
+      title: vscode.l10n.t('Creating odoo instance'),
       location: vscode.ProgressLocation.Notification
     }, async (progress) => {
       // Declare directories
-      progress.report({message: 'Initializing folders...'});
+      progress.report({message: vscode.l10n.t('Initializing folders...')});
       const containerId = randomUUID();
       const containerPath = vscode.Uri.file(join(context.globalStorageUri.fsPath, containerId));
       const addonsDirectoryName = 'addons', configDirectoryName = 'config', libraryDirectoryName = 'lib';
@@ -92,7 +89,7 @@ function createInstance(context: vscode.ExtensionContext, instanceFetcher: Insta
         await vscode.workspace.fs.delete(containerPath, {recursive: true, useTrash: false});
         return; 
       }
-      progress.report({message: 'Creating the container...'});
+      progress.report({message: vscode.l10n.t('Creating the container...')});
       const port = instanceFetcher.getAvailablePort();    
       try {
         await promiseExec(`docker container create --name ${containerId} --network ${PostgreSQLManager.networkName} -p ${port}:8069 -v ${join('.', configDirectoryName)}:/etc/odoo -v ${join('.', addonsDirectoryName)}:/mnt/extra-addons -e HOST=${PostgreSQLManager.containerName} -e USER=${await context.secrets.get(PostgreSQLSecretsKey.pgUser)} -e PASSWORD=${await context.secrets.get(PostgreSQLSecretsKey.pgPass)} odoo:${selectedVersion}`, {cwd:  containerPath.fsPath});
@@ -103,7 +100,7 @@ function createInstance(context: vscode.ExtensionContext, instanceFetcher: Insta
         await vscode.workspace.fs.delete(containerPath, {recursive: true, useTrash: false});
         return;
       }
-      progress.report({message: 'Saving instance data'});
+      progress.report({message: vscode.l10n.t('Saving instance data')});
       instanceFetcher.addInstance(selectedVersion, 
         containerId, 
         containerName, 
@@ -159,12 +156,12 @@ function refreshInstances(instanceDataProvider: InstanceDataProvider){
 
 function deleteOdooInstance(instanceFetcher: InstancesFetcher, instanceDataProvider: InstanceDataProvider){
 	return async (instance: OdooInstanceItem | undefined)=>{
-    if((await vscode.window.showWarningMessage('You are going to delete a instance and all the data related', 
+    if((await vscode.window.showWarningMessage(vscode.l10n.t('You are going to delete a instance and all the data related'), 
     {
       modal: true,
-      detail: 'Are you sure?'
+      detail: vscode.l10n.t('Are you sure?')
     }, 
-    {title: 'Yes'}, {title: 'No', isCloseAffordance: true}))?.title !== ConfirmDeleteOption.yes){
+    {title: vscode.l10n.t('Yes')}, {title: vscode.l10n.t('No'), isCloseAffordance: true}))?.title !== vscode.l10n.t('Yes')){
       return; 
     }
     let toRemove: {
@@ -176,7 +173,7 @@ function deleteOdooInstance(instanceFetcher: InstancesFetcher, instanceDataProvi
     if (!instance) {
       const instanceToRemove = await askForInstance(instanceFetcher);
       if (!instanceToRemove) {
-        vscode.window.showErrorMessage('You has cancelled the deletion.');
+        vscode.window.showErrorMessage(vscode.l10n.t('You has cancelled the deletion.'));
         return;
       }
       toRemove = {
@@ -194,25 +191,25 @@ function deleteOdooInstance(instanceFetcher: InstancesFetcher, instanceDataProvi
       };
     }
     await vscode.window.withProgress({location: vscode.ProgressLocation.Notification, cancellable: false}, async (progress) => {
-      progress.report({message: 'Stopping container...'});
+      progress.report({message: vscode.l10n.t('Stopping container...')});
       try {
         await promiseExec(`docker container stop ${toRemove.id}`);
       } catch (error) {
         console.error(error);
       }
-      progress.report({message: 'Removing container...'});
+      progress.report({message: vscode.l10n.t('Removing container...')});
       try {
         await promiseExec(`docker container rm ${toRemove.id}`);
       } catch (error) {
         console.error(error);
       }
       try {
-        progress.report({message: 'Removing container data...'});
+        progress.report({message: vscode.l10n.t('Removing container data...')});
         await vscode.workspace.fs.delete(toRemove.odooInstance, {recursive: true, useTrash: false});
       } catch (error) {
         console.error(error);
       }
-      progress.report({message: 'Deleting container from index...'});
+      progress.report({message: vscode.l10n.t('Deleting container from index...')});
       instanceFetcher.deleteFromBusyPorts(toRemove.port);
       if(instanceFetcher.deleteInstance(toRemove.version, toRemove.id)){
         await instanceFetcher.saveActualInstances();
@@ -263,6 +260,7 @@ function openAddonsFolder(){
     console.log(instance);
     let opener;
     switch (process.platform) {
+      //TODO: Comprobar que se pueda usar tanto en linux como mac
       case 'darwin':
         opener = 'open';
         break;

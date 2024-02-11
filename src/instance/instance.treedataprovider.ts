@@ -1,8 +1,7 @@
-import { EventEmitter, ExtensionContext, ProviderResult, ThemeIcon, TreeDataProvider, TreeItem, TreeItemCollapsibleState, TreeItemLabel, Uri, window, workspace } from "vscode";
+import { EventEmitter, ExtensionContext, ProviderResult, ThemeIcon, TreeDataProvider, TreeItem, TreeItemCollapsibleState, TreeItemLabel, Uri, l10n, window, workspace } from "vscode";
 import { OdooInstance, OdooVersion, OdooVersionData, parseOdooVersion } from "./instance.model";
 import { join } from "path";
 import { InstanceStatusManager } from "./instance.status.manager";
-import { promiseExec } from "../extension_utils";
 import { execSync } from "child_process";
 
 export enum OdooInstanceItemType{
@@ -105,7 +104,7 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
       }
     } catch (error) {
       if((error as Error).message.match(/Container .* is not running$/gm) !== null){
-        window.showErrorMessage('The instance must to be started for get the module list. Start it and refresh the instances');
+        window.showErrorMessage(l10n.t('The instance must to be started for get the module list. Start it and refresh the instances'));
       }else{
         console.error(error);
       }
@@ -120,7 +119,7 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
   }
   #parseModuleGroup(folderModuleType: OdooInstanceFolderModules, instanceId: string): OdooInstanceItem{
     return {
-      label: folderModuleType === OdooInstanceFolderModules.preAddedModules ? 'Preadded modules' : 'Your modules',
+      label: folderModuleType === OdooInstanceFolderModules.preAddedModules ? l10n.t('Preadded modules') : l10n.t('Your modules'),
       instanceId: instanceId,
       contextValue: OdooInstanceItemType.instanceModuleGroup,
       moduleFolderType: folderModuleType ,
@@ -247,7 +246,6 @@ export class InstancesFetcher{
         }
         throw error;
       }
-      
     }
     async saveActualInstances(){
       await workspace.fs.writeFile(

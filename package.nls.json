@@ -1,0 +1,22 @@
+{
+
+    "oim.refresh.title": "Refresh instance manager",
+
+    "oim.view.container.title": "Odoo Instance Manager",
+
+    "oim.instances.view.name": "Instances",
+    "oim.instances.view.contextualTitle": "Instances",
+    "oim.instances.view.welcome.dockerStarted": "You has not created any instances.\n[Create instance](command:oim.instance.create)",
+    "oim.instances.view.welcome.dockerNotStarted": "Docker engine is not running. Start it",
+    "oim.instances.view.welcome.loading": "Loading...",
+
+    "oim.instance.create.title": "Create a odoo instance",
+    "oim.instance.refresh.title": "Refresh odoo instances",
+    "oim.instance.delete.title": "Delete a odoo instance",
+    "oim.instance.open.title": "Open in browser",
+    "oim.instance.start.title": "Start odoo instance",
+    "oim.instance.stop.title": "Stop odoo instance",
+    "oim.instance.module.openFolder.title": "Open odoo modules folder",
+
+    "oim.postgresql.statusbar.title": "Manage status of PostgresSQL container"
+}

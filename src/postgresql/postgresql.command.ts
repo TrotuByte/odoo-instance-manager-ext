@@ -1,4 +1,4 @@
-import { ExtensionContext, StatusBarItem, commands, window } from "vscode";
+import { ExtensionContext, StatusBarItem, commands, l10n, window } from "vscode";
 import { PostgresGlobalStateKey, PostgresStatus } from "./postgresql.model";
 import { PostgreSQLManager } from "./postgresql.manager";
 
@@ -7,14 +7,14 @@ function manageContainerStatus(context: ExtensionContext, manager: PostgreSQLMan
         const actualState = context.globalState.get<PostgresStatus>(PostgresGlobalStateKey.postgresSqlStatus);
         switch(actualState){
             case PostgresStatus.notInitialized:
-                postgresStatusItem.text = '$(loading~spin) Initializing containers network';
+                postgresStatusItem.text = `$(loading~spin) ${l10n.t('Initializing containers network')}`;
                 try {
                     await manager.tryInitializeDockerNetwork();
                 } catch (error) {
                     window.showErrorMessage((error as Error).message);
                     break;
                 }
-                postgresStatusItem.text = '$(loading~spin) Initializing PostgreSQL container';
+                postgresStatusItem.text = `$(loading~spin) ${l10n.t('Initializing PostgreSQL container')}`;
                 try {
                     await manager.initializeContainer(context);
                     await manager.getStatus();
@@ -24,7 +24,7 @@ function manageContainerStatus(context: ExtensionContext, manager: PostgreSQLMan
                 }
                 break;
             case PostgresStatus.running:
-                postgresStatusItem.text = '$(loading~spin) Stopping PostgreSQL container';
+                postgresStatusItem.text = `$(loading~spin) ${l10n.t('Stopping PostgreSQL container')}`;
                 try {
                     await manager.stopContainer();
                     await manager.getStatus();
@@ -34,7 +34,7 @@ function manageContainerStatus(context: ExtensionContext, manager: PostgreSQLMan
                 }
                 break;
             case PostgresStatus.stopped:
-                postgresStatusItem.text = '$(loading~spin) Starting PostgreSQL container';
+                postgresStatusItem.text = `$(loading~spin) ${l10n.t('Starting PostgreSQL container')}`;
                 try {
                     await manager.startContainer();
                     await manager.getStatus();
@@ -44,7 +44,7 @@ function manageContainerStatus(context: ExtensionContext, manager: PostgreSQLMan
                 }
                 break;
             case undefined:
-                window.showErrorMessage('No state of container detected, please restart the editor');
+                window.showErrorMessage(l10n.t('No state of container detected, please restart the editor'));
                 break;
         }
     };

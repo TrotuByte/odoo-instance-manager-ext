@@ -1,4 +1,4 @@
-import { StatusBarAlignment, StatusBarItem, window, ExtensionContext } from "vscode";
+import { StatusBarAlignment, StatusBarItem, window, ExtensionContext, l10n } from "vscode";
 import { PostgresGlobalStateKey, PostgresStatus } from "./postgresql.model";
 export type ChangePostgresStatusBarIndicator = (newStatus: PostgresStatus) => void;
 export class ReadedStatusEvent extends Event{
@@ -10,17 +10,17 @@ export function createPostgresStatusBar(context: ExtensionContext, initialStatus
 }{
     const pgStatusBar: StatusBarItem = window.createStatusBarItem(StatusBarAlignment.Left);
     context.globalState.update(PostgresGlobalStateKey.postgresSqlStatus, initialStatus);
-    const baseText = '$(database) PostgreSQL for Odoo:';
+    const baseText = `$(database) ${l10n.t('PostgreSQL for Odoo')}:`;
     function getStatusLabel(newStatus: PostgresStatus){
         switch (newStatus) {
             case PostgresStatus.notInitialized:
-                return 'Not initialized';
+                return l10n.t('Not initialized');
             case PostgresStatus.running:
-               return 'Running';
+               return l10n.t('Running');
             case PostgresStatus.stopped:
-                return 'Stopped';
+                return l10n.t('Stopped');
             default:
-                throw Error("Not valid status");
+                throw Error(l10n.t("Not valid status"));
         }
     }
     pgStatusBar.command = 'oim.postgresql.statusbar';

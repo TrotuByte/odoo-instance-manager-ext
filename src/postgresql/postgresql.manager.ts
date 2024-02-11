@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { ContainerDataJson, DockerNotAccessibleError, promiseExec } from "../extension_utils";
 import { PostgresStatus } from "./postgresql.model";
-import { EventEmitter, ExtensionContext } from "vscode";
+import { EventEmitter, ExtensionContext, l10n } from "vscode";
 export enum PostgreSQLSecretsKey {
     pgUser="PG_PASS",
     pgPass="PG_USER"
@@ -48,7 +48,7 @@ export class PostgreSQLManager {
             this.#eventEmitter.fire(PostgresStatus.stopped);
             return PostgresStatus.stopped;
         }
-        throw Error('State not managed by the extension');
+        throw Error(l10n.t('State not managed by the extension'));
     }
     async tryInitializeDockerNetwork() {
         try {
