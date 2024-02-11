@@ -90,7 +90,7 @@
         {
           "id": "oim-view-container",
           "title": "%oim.view.container.title%",
-          "icon": "resources/svg/tree_view_manifest_data_icon_dark.svg"
+          "icon": "resources/svg/view_container_instance_icon.svg"
         }
       ]
     },

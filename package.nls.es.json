@@ -1,0 +1,22 @@
+{
+
+    "oim.refresh.title": "Recargar gestor de instancias",
+
+    "oim.view.container.title": "Gestor de Instancias de Odoo",
+
+    "oim.instances.view.name": "Instancias",
+    "oim.instances.view.contextualTitle": "Instancias",
+    "oim.instances.view.welcome.dockerStarted": "No has creado ninguna instancia.\n[Crear instancia](command:oim.instance.create)",
+    "oim.instances.view.welcome.dockerNotStarted": "Docker engine no está iniciado. Inicialo",
+    "oim.instances.view.welcome.loading": "Cargando...",
+
+    "oim.instance.create.title": "Crear una instancia de Odoo",
+    "oim.instance.refresh.title": "Recargar instancias de Odoo",
+    "oim.instance.delete.title": "Borrar una instancia de Odoo",
+    "oim.instance.open.title": "Abrir en el navegador",
+    "oim.instance.start.title": "Iniciar instancia de Odoo",
+    "oim.instance.stop.title": "Parar instancia de Odoo",
+    "oim.instance.module.openFolder.title": "Abrir carpeta de módulos",
+
+    "oim.postgresql.statusbar.title": "Maneja el estado del contenedor de PostgreSQL"
+}

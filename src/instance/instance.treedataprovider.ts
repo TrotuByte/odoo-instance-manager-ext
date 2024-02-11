@@ -155,7 +155,7 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
           '..',
           'resources',
           'svg',
-          'tree_view_manifest_data_icon_light.svg'
+          'tree_view_instance_icon_light.svg'
         ),
         dark: join(
           __filename,
@@ -164,7 +164,7 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
           '..',
           'resources',
           'svg',
-          'tree_view_manifest_data_icon_dark.svg'
+          'tree_view_instance_icon_dark.svg'
         ),
       },
     };
