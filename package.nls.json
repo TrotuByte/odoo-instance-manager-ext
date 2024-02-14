@@ -14,6 +14,7 @@
     "oim.instance.refresh.title": "Refresh odoo instances",
     "oim.instance.delete.title": "Delete a odoo instance",
     "oim.instance.open.title": "Open in browser",
+    "oim.instance.openShell.title": "Open instance shell",
     "oim.instance.start.title": "Start odoo instance",
     "oim.instance.stop.title": "Stop odoo instance",
     "oim.instance.module.openFolder.title": "Open odoo modules folder",

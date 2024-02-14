@@ -4,7 +4,6 @@ import { commands, l10n } from "vscode";
 export const promiseExec = promisify(exec);
 export class DockerNotAccessibleError extends Error{
   constructor() {
-      console.log(l10n.bundle);
       super(l10n.t("We can't use the command docker, please ensure you are running docker in your system or this user can use docker."));
       super.name = 'docker-not-accesible';
   }

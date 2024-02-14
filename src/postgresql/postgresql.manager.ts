@@ -20,7 +20,7 @@ export class PostgreSQLManager {
         const authData: PostgresAuthData = this.genAuthData();
         await context.secrets.store(PostgreSQLSecretsKey.pgUser, authData.user);
         await context.secrets.store(PostgreSQLSecretsKey.pgPass, authData.password);
-        await promiseExec(`docker run --network ${PostgreSQLManager.networkName} --name ${PostgreSQLManager.containerName}  -e POSTGRES_USER=${authData.user} -e POSTGRES_PASSWORD=${authData.password} -e POSTGRES_DB=postgres -d postgres`);
+        await promiseExec(`docker run --rm --network ${PostgreSQLManager.networkName} --name ${PostgreSQLManager.containerName} -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres -d postgres`);
     }
     genAuthData(): PostgresAuthData {
         return {

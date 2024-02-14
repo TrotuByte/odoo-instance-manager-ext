@@ -34,5 +34,6 @@
     "Not initialized": "No inicializado",
     "Running": "En ejecución",
     "Stopped": "Parado",
-    "Not valid status": "Estado no válido"
+    "Not valid status": "Estado no válido",
+    "Remember that the user is {0} and the password is {1}": "Recuerda que el usuario es {0} y la contraseña es {1}"
 }

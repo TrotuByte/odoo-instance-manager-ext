@@ -17,6 +17,8 @@
     "workspaceContains:./__manifest__.py"
   ],
   "main": "./out/extension.js",
+  "icon": "./resources/img/icon.png",
+  "preview": true,
   "contributes": {
     "languages": [
       {
@@ -58,6 +60,12 @@
         "command": "oim.instance.open",
         "title": "%oim.instance.open.title%",
         "icon": "$(globe)",
+        "enablement": "oim.startedDocker == true"
+      },
+      {
+        "command": "oim.instance.openShell",
+        "title": "%oim.instance.openShell.title%",
+        "icon": "$(terminal)",
         "enablement": "oim.startedDocker == true"
       },
       {
@@ -160,8 +168,14 @@
           "group": "inline"
         },
         {
+          "command": "oim.instance.openShell",
+          "when": "view == oim.instances.view && viewItem =~ /^instanceOdoo_.+$/ && viewItem in oim.startedInstances",
+          "group": "inline"
+        },
+        {
           "command": "oim.instance.delete",
-          "when": "view == oim.instances.view && viewItem =~ /^instanceOdoo_.+$/"
+          "when": "view == oim.instances.view && viewItem =~ /^instanceOdoo_.+$/",
+          "group": "inline"
         }
       ]
     }

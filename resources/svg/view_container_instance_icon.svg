@@ -83,14 +83,14 @@
      inkscape:deskcolor="#505050"
      showgrid="false"
      inkscape:zoom="1.0869003"
-     inkscape:cx="150.42778"
-     inkscape:cy="270.95401"
+     inkscape:cx="150.8878"
+     inkscape:cy="270.03397"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g1">
+     inkscape:current-layer="g9-0-2">
     <sodipodi:guide
        position="0,512"
        orientation="0,512.00006"
@@ -128,7 +128,7 @@
        transform="matrix(0.90725329,0,0,0.90725329,-137.3573,-212.29016)">
       <g
          id="g2"
-         transform="translate(-0.47700805,-0.47692305)">
+         transform="matrix(1.1285684,0,0,1.1285684,-184.06932,-80.378034)">
         <path
            id="path1-0-8-1-0-0-2"
            style="font-variation-settings:'wght' 900;fill:#131313;fill-opacity:1;stroke:url(#linearGradient10);stroke-width:3.19781;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0;paint-order:fill markers stroke"
@@ -138,7 +138,7 @@
            inkscape:export-ydpi="96"
            sodipodi:nodetypes="csssccscsccs" />
         <rect
-           style="font-variation-settings:'wght' 900;fill:none;stroke:#131313;stroke-width:19.9685;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+           style="font-variation-settings:'wght' 900;fill:none;stroke:#131313;stroke-width:27.5557;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
            id="rect6-1-4-1-9"
            width="198.70366"
            height="198.70357"
@@ -148,7 +148,7 @@
       </g>
       <g
          id="g2-0"
-         transform="translate(271.10214,-0.47692005)">
+         transform="matrix(1.1285684,0,0,1.1285684,122.42631,-80.37803)">
         <path
            id="path1-0-8-1-0-0-2-5"
            style="font-variation-settings:'wght' 900;fill:#131313;fill-opacity:1;stroke:url(#linearGradient3);stroke-width:3.19781;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0;paint-order:fill markers stroke"
@@ -158,7 +158,7 @@
            inkscape:export-ydpi="96"
            sodipodi:nodetypes="csssccscsccs" />
         <rect
-           style="font-variation-settings:'wght' 900;fill:none;stroke:#131313;stroke-width:19.9685;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+           style="font-variation-settings:'wght' 900;fill:none;stroke:#131313;stroke-width:27.5557;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
            id="rect6-1-4-1-9-2"
            width="198.70366"
            height="198.70357"
@@ -168,7 +168,7 @@
       </g>
       <g
          id="g2-0-2"
-         transform="translate(-1.6496601,272.77819)">
+         transform="matrix(1.1285684,0,0,1.1285684,-185.39274,228.00904)">
         <path
            id="path1-0-8-1-0-0-2-5-5"
            style="font-variation-settings:'wght' 900;fill:#131313;fill-opacity:1;stroke:url(#linearGradient4);stroke-width:3.19781;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0;paint-order:fill markers stroke"
@@ -178,7 +178,7 @@
            inkscape:export-ydpi="96"
            sodipodi:nodetypes="csssccscsccs" />
         <rect
-           style="font-variation-settings:'wght' 900;fill:none;stroke:#131313;stroke-width:19.9685;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+           style="font-variation-settings:'wght' 900;fill:none;stroke:#131313;stroke-width:27.5557;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
            id="rect6-1-4-1-9-2-0"
            width="198.70366"
            height="198.70357"
@@ -188,7 +188,7 @@
       </g>
       <g
          id="g2-4"
-         transform="translate(271.10214,271.10214)">
+         transform="matrix(1.1285684,0,0,1.1285684,122.42631,226.11751)">
         <path
            id="path1-0-8-1-0-0-2-8"
            style="font-variation-settings:'wght' 900;fill:#131313;fill-opacity:1;stroke:url(#linearGradient2);stroke-width:3.19781;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0;paint-order:fill markers stroke"
@@ -198,7 +198,7 @@
            inkscape:export-ydpi="96"
            sodipodi:nodetypes="csssccscsccs" />
         <rect
-           style="font-variation-settings:'wght' 900;fill:none;stroke:#131313;stroke-width:19.9685;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+           style="font-variation-settings:'wght' 900;fill:none;stroke:#131313;stroke-width:27.5557;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
            id="rect6-1-4-1-9-3"
            width="198.70366"
            height="198.70357"

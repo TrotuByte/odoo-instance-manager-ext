@@ -99,7 +99,7 @@ export class InstanceDataProvider implements TreeDataProvider<OdooInstanceItem> 
           modulesURL.push(...execSync(`docker exec ${instanceId} sh -c "find /usr/lib/python3/dist-packages/odoo/addons -depth -mindepth 1 -maxdepth 1 -not -path "*/__pycache__" -type d"`, {encoding: 'utf-8'}).split('\n'));
           break;
         case OdooInstanceFolderModules.userAddedModules:
-          modulesURL.push(...execSync(`docker exec ${instanceId} sh -c "find /mnt/extra-addons/. -depth -mindepth 1 -maxdepth 1 -not -path "*/__pycache__" -type d"`, {encoding: 'utf-8'}).split('\n'));
+          modulesURL.push(...execSync(`docker exec ${instanceId} sh -c "find /mnt/extra-addons -depth -mindepth 1 -maxdepth 1 -not -path "*/__pycache__" -type d"`, {encoding: 'utf-8'}).split('\n'));
           break;
       }
     } catch (error) {

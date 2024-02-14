@@ -14,6 +14,7 @@
     "oim.instance.refresh.title": "Recargar instancias de Odoo",
     "oim.instance.delete.title": "Borrar una instancia de Odoo",
     "oim.instance.open.title": "Abrir en el navegador",
+    "oim.instance.openShell.title": "Abrir shell de la instancia",
     "oim.instance.start.title": "Iniciar instancia de Odoo",
     "oim.instance.stop.title": "Parar instancia de Odoo",
     "oim.instance.module.openFolder.title": "Abrir carpeta de módulos",

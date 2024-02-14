@@ -92,7 +92,7 @@ function createInstance(context: vscode.ExtensionContext, instanceFetcher: Insta
       progress.report({message: vscode.l10n.t('Creating the container...')});
       const port = instanceFetcher.getAvailablePort();    
       try {
-        await promiseExec(`docker container create --name ${containerId} --network ${PostgreSQLManager.networkName} -p ${port}:8069 -v ${join('.', configDirectoryName)}:/etc/odoo -v ${join('.', addonsDirectoryName)}:/mnt/extra-addons -e HOST=${PostgreSQLManager.containerName} -e USER=${await context.secrets.get(PostgreSQLSecretsKey.pgUser)} -e PASSWORD=${await context.secrets.get(PostgreSQLSecretsKey.pgPass)} odoo:${selectedVersion}`, {cwd:  containerPath.fsPath});
+        await promiseExec(`docker container create --name ${containerId} --network ${PostgreSQLManager.networkName} --link ${PostgreSQLManager.containerName}:db -p ${port}:8069 -v "${addonsDirectory.fsPath}:/mnt/extra-addons" odoo:${selectedVersion} -- -d ${containerId} --dev all`, {cwd:  containerPath.fsPath});
         instanceFetcher.addToBusyPorts(port);
       } catch (error) {
         vscode.window.showErrorMessage((error as Error).message);
@@ -109,41 +109,6 @@ function createInstance(context: vscode.ExtensionContext, instanceFetcher: Insta
         libraryDirectory, 
         port);
       await instanceFetcher.saveActualInstances();
-      // Getting library of Odoo from container (Very slow)
-      // try {
-      //   progress.report({message: 'Getting the Odoo library from container'});
-      //     for(const actFile of (await promiseExec(
-      //       `docker exec ${containerId} sh -c "find /usr/lib/python3/dist-packages/odoo/ -not -path "*/__pycache__/*" -type f"`, {maxBuffer: Math.pow(1024, 5)}))
-      //       .stdout
-      //       .split('\n')) {
-      //       const trimmedUrl = actFile.trim();
-      //       if(trimmedUrl.length < 1){
-      //         continue; 
-      //       }
-      //       const relativePathFile = trimmedUrl.substring(trimmedUrl.indexOf('odoo/'));
-      //       const command = `docker cp ${containerId}:${trimmedUrl} ./${relativePathFile}`;
-      //       try {
-      //           await promiseExec(command, {cwd: libraryDirectory.fsPath});
-      //       } catch (error) {
-      //         const err: Error = error as Error;
-      //         if(err.message.includes('directory') && err.message.includes('does not exist')){
-      //           try {
-      //             await vscode.workspace.fs.createDirectory(vscode.Uri.file(join(libraryDirectory.fsPath, relativePathFile.substring(0,relativePathFile.lastIndexOf('/')))));
-      //             await promiseExec(command, {cwd: libraryDirectory.fsPath});
-      //             progress.report({message: `Getting the Odoo library from container: ${relativePathFile}`});
-      //           } catch (errorInCatch) {
-      //             console.error(errorInCatch);
-      //           }
-      //           continue;
-      //         }
-      //         console.error(err);
-      //       }
-      //     }
-
-      // } catch (error) {
-      //   console.error(error);
-      // }
-      
       instanceDataProvider.refresh();
       return;
     });
@@ -186,7 +151,7 @@ function deleteOdooInstance(instanceFetcher: InstancesFetcher, instanceDataProvi
       toRemove = {
         odooInstance: vscode.Uri.file(join(instance.instanceAddonPath!.fsPath, '..')),
         version: instance.instanceVersion!,
-        id: instance.id!,
+        id: instance.instanceId!,
         port: instance.instancePort!
       };
     }
@@ -199,7 +164,7 @@ function deleteOdooInstance(instanceFetcher: InstancesFetcher, instanceDataProvi
       }
       progress.report({message: vscode.l10n.t('Removing container...')});
       try {
-        await promiseExec(`docker container rm ${toRemove.id}`);
+        await promiseExec(`docker container rm -v ${toRemove.id}`);
       } catch (error) {
         console.error(error);
       }
@@ -239,16 +204,18 @@ function startInstance(instanceStatusManager: InstanceStatusManager){
     if(!instance){
       return;
     }
-    await instanceStatusManager.startInstance(instance.instanceId!);
+    
+    await instanceStatusManager.startInstance(instance);
+    vscode.window.showInformationMessage(new vscode.MarkdownString(vscode.l10n.t('Remember that the user is `{0}` and the password is `{1}`', 'admin', 'admin')).value);
   };
 }
 
 function stopInstance(instanceStatusManager: InstanceStatusManager){
-  return async (instance: OdooInstanceItem | undefined) => {
+  return async (instance: OdooInstanceItem | undefined) => {    
     if(!instance){
       return;
     }
-    await instanceStatusManager.stopInstance(instance.instanceId!);
+    await instanceStatusManager.stopInstance(instance);
   };
 }
 
@@ -257,7 +224,6 @@ function openAddonsFolder(){
     if(instance === undefined) {
       return;
     }
-    console.log(instance);
     let opener;
     switch (process.platform) {
       //TODO: Comprobar que se pueda usar tanto en linux como mac
@@ -281,6 +247,18 @@ function openAddonsFolder(){
   };
 }
 
+function openShell(context: vscode.ExtensionContext){
+  return (odooInstance: OdooInstanceItem | undefined) => {
+    if(odooInstance === undefined){
+      return;
+    }
+    const terminal = vscode.window.createTerminal();
+    terminal.sendText(`docker exec -it ${odooInstance.instanceId!} /bin/bash`);
+    terminal.show();
+    context.subscriptions.push(terminal);
+  };
+}
+
 export default function registerInstanceCommands(context: vscode.ExtensionContext, instanceFetcher: InstancesFetcher, instanceDataProvider: InstanceDataProvider, postgresManager: PostgreSQLManager, instanceStatusManager: InstanceStatusManager){
   return [
     vscode.commands.registerCommand('oim.instance.create', createInstance(context, instanceFetcher, instanceDataProvider, postgresManager)),
@@ -289,6 +267,7 @@ export default function registerInstanceCommands(context: vscode.ExtensionContex
     vscode.commands.registerCommand('oim.instance.open', openInBrowser(instanceFetcher)),
     vscode.commands.registerCommand('oim.instance.start', startInstance(instanceStatusManager)),
     vscode.commands.registerCommand('oim.instance.stop', stopInstance(instanceStatusManager)),
-    vscode.commands.registerCommand('oim.instance.module.openFolder', openAddonsFolder())
+    vscode.commands.registerCommand('oim.instance.module.openFolder', openAddonsFolder()),
+    vscode.commands.registerCommand('oim.instance.openShell', openShell(context))
   ];
 }

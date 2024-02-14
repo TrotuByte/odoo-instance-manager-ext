@@ -66,7 +66,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				throw error;
 			}
 		}
-		if(initialStatus){
+		if(initialStatus !== undefined){
 			await initializeExtension(context, instanceFetcher, instanceDataProviver, instanceStatusManager, initialStatus);
 		}else{
 			context.subscriptions.push(vscode.commands.registerCommand('oim.refresh', refreshExtension(context, instanceFetcher, instanceDataProviver, instanceStatusManager)));
