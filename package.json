@@ -4,8 +4,8 @@
   "author": {
     "name": "Manuel Jesús (AnesCDev)"
   },
-  "description": "This extension give to the developer a ease way to create and manage Odoo Community Edition Instances for the version 15, 16 and 17",
-  "version": "0.1.0",
+  "description": "This extension give to the developer a easy way to create and manage Odoo Community Edition Instances for the version 15, 16 and 17",
+  "version": "0.1.1",
   "publisher": "Anestion",
   "license": "BSD-3-Clause",
   "keywords": ["odoo", "instances", "odoo instances", "odoo development"],
@@ -24,14 +24,14 @@
   "activationEvents": [
     "onView:oim-view-container"
   ],
-  "homepage": "https://github.com/Anestion/odoo-instance-manager",
+  "homepage": "https://github.com/Anestion/odoo-instance-manager-ext",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Anestion/odoo-instance-manager"
+    "url": "https://github.com/Anestion/odoo-instance-manager-ext"
   },
   "bugs": {
     "email": "anescdev@gmail.com",
-    "url": "https://github.com/Anestion/odoo-instance-manager/issues"
+    "url": "https://github.com/Anestion/odoo-instance-manager-ext/issues"
   },
   "pricing": "Free",
   "main": "./out/extension.js",

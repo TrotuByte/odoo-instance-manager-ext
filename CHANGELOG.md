@@ -1,4 +1,8 @@
 # Change Log for Odoo Instance Manager
+## [0.1.1]
+- Fix one error in package.json
+- Change code visibility to public
+
 ## [0.1.0]
 
 - Added a Status bar item to manage the state of the PostgreSQL container
