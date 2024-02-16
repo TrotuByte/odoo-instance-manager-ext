@@ -11,7 +11,6 @@ In a future i will make a video showing all the features better. But for the mom
 All the functionality is on the view container Odoo Instance Manager and the item in the Status bar, the item will control
 the status of the PostgreSQL container required for Odoo.
 
-
 ## Features
 * Fast management for PostgreSQL container
 * Create a instance of Odoo 15, 16 or 17

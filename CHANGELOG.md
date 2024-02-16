@@ -1,9 +1,10 @@
-# Change Log
+# Change Log for Odoo Instance Manager
+## [0.1.0]
 
-All notable changes to the "odoo-support-for-vscode" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- Added a Status bar item to manage the state of the PostgreSQL container
+- Added a command for create a Odoo instance
+- Added a command for delete a Odoo instance
+- Added a command for open the extra addons folder
+- Added a command for open the instance in the browser
+- Added a command for open the shell of a instance.
+- Added the list of preinstalled and custom modules.

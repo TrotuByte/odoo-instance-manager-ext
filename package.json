@@ -2,32 +2,42 @@
   "name": "odoo-instance-manager",
   "displayName": "Odoo instance manager",
   "author": {
-    "name": "AnesCDev"
+    "name": "Manuel Jesús (AnesCDev)"
   },
   "description": "This extension give to the developer a ease way to create and manage Odoo Community Edition Instances for the version 15, 16 and 17",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "publisher": "Anestion",
+  "license": "BSD-3-Clause",
+  "keywords": ["odoo", "instances", "odoo instances", "odoo development"],
   "engines": {
     "vscode": "^1.81.0"
   },
   "l10n": "./l10n",
+  "galleryBanner": {
+    "theme": "light",
+    "color": "#242424"
+  },
   "categories": [
-    "Other"
+    "Other",
+    "Visualization"
   ],
   "activationEvents": [
-    "workspaceContains:./__manifest__.py"
+    "onView:oim-view-container"
   ],
+  "homepage": "https://github.com/Anestion/odoo-instance-manager",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Anestion/odoo-instance-manager"
+  },
+  "bugs": {
+    "email": "anescdev@gmail.com",
+    "url": "https://github.com/Anestion/odoo-instance-manager/issues"
+  },
+  "pricing": "Free",
   "main": "./out/extension.js",
   "icon": "./resources/img/icon.png",
   "preview": true,
   "contributes": {
-    "languages": [
-      {
-        "id": "python"
-      },
-      {
-        "id": "javascript"
-      }
-    ],
     "configuration": {
       "title": "Odoo instance manager"
     },
