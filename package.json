@@ -35,7 +35,7 @@
   },
   "pricing": "Free",
   "main": "./out/extension.js",
-  "icon": "./resources/img/icon.png",
+  "icon": "./icon.png",
   "preview": true,
   "contributes": {
     "configuration": {
