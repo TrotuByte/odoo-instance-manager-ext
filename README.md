@@ -7,7 +7,9 @@ Odoo Instance Manager is a extension that provides in a easily way the capacity 
 **This extension use Docker** in the background for the instance management, then if you hasn't installed follow the [**official guide**](https://docs.docker.com/get-docker/) for your system.
 
 ## Overview
-I prefer resume how to use this extension in the next video.
+In a future i will make a video showing all the features better. But for the moment i will put some image and explain a bit.
+All the functionality is on the view container Odoo Instance Manager and the item in the Status bar, the item will control
+the status of the PostgreSQL container required for Odoo.
 
 
 ## Features
